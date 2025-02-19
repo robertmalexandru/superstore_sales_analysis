@@ -1,5 +1,7 @@
 # Superstore Sales Analysis
 
+![Superstore](superstore.jpeg)
+
 ## Overview
 This analysis explores the Superstore sales dataset to uncover key business insights, including sales trends, product performance, regional patterns, and profitability drivers. The goal is to identify opportunities for optimization and growth.
 
