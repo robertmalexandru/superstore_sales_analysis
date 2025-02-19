@@ -19,13 +19,13 @@ pd.set_option("display.float_format", lambda x: "%.2f" % x)
 data = pd.read_csv("superstore.csv", encoding_errors="ignore")
 
 # Convert dates and select relevant columns
-data["Order Date"] = pd.to_datetime(data["Order Date"])
-data["Ship Date"] = pd.to_datetime(data["Ship Date"])
+data["order_date"] = pd.to_datetime(data["order_date"])
+data["ship_date"] = pd.to_datetime(data["ship_date"])
 
 essential_columns = [
-    "Order ID", "Order Date", "Ship Date", "Ship Mode", "Segment",
-    "City", "State", "Region", "Category", "Sub-Category", 
-    "Product Name", "Sales", "Quantity", "Discount", "Profit"
+    "row_id", "order_id", "order_date", "ship_date", "ship_mode", "customer_id", "customer_name", "segment",
+    "country", "city", "state", "postal_code", "region", "product_id", "category", "sub-category", 
+    "product_name", "sales", "quantity", "discount", "profit"
 ]
 data = data[essential_columns]
 ```
@@ -34,16 +34,16 @@ data = data[essential_columns]
 ```python
 # Create analytical features
 data = data.assign(
-    month=data["Order Date"].dt.month,
-    year=data["Order Date"].dt.year,
-    year_month=data["Order Date"].dt.to_period("M"),
-    discount_amount=data["Sales"] * data["Discount"],
-    unit_price=data["Sales"] / data["Quantity"],
-    gross_profit=data["Sales"] * data["Discount"] + data["Profit"],
-    fulfillment_time=data["Ship Date"] - data["Order Date"],
-    profit_per_unit=data["Profit"] / data["Quantity"],
-    profit_margin=(data["Profit"] / data["Sales"]) * 100,
-    net_sales=data["Sales"] - (data["Discount"] * data["Sales"])
+    month=data["order_date"].dt.month,
+    year=data["order_date"].dt.year,
+    year_month=data["order_date"].dt.to_period("M"),
+    discount_amount=data["sales"] * data["discount"],
+    unit_price=data["sales"] / data["quantity"],
+    gross_profit=data["sales"] * data["discount"] + data["profit"],
+    fulfillment_time=data["ship_date"] - data["order_date"],
+    profit_per_unit=data["profit"] / data["quantity"],
+    profit_margin=(data["profit"] / data["sales"]) * 100,
+    net_sales=data["sales"] - (data["discount"] * data["sales"])
 )
 ```
 
@@ -56,16 +56,16 @@ def plot_sales_trends(data):
     
     # Yearly trends
     yearly_data = data.groupby('year').agg({
-        'Sales': 'sum',
-        'Order Date': 'count'
+        'sales': 'sum',
+        'order_date': 'count'
     })
     
-    yearly_data['Sales'].plot(ax=ax1, color='#003f5c')
+    yearly_data['sales'].plot(ax=ax1, color='#003f5c')
     ax1.set_title('Annual Sales')
     ax1.set_ylabel('Total Sales ($)')
     
     # Monthly trends
-    monthly_data = data.groupby('year_month')['Sales'].sum()
+    monthly_data = data.groupby('year_month')['sales'].sum()
     monthly_data.plot(ax=ax2, color='#003f5c')
     ax2.set_title('Monthly Sales Trend')
     ax2.set_ylabel('Sales ($)')
@@ -81,10 +81,10 @@ plt.show()
 ```python
 def analyze_product_performance(data):
     # Calculate product metrics
-    product_metrics = data.groupby(['Category', 'Sub-Category']).agg({
-        'Sales': 'sum',
-        'Profit': 'sum',
-        'Quantity': 'sum',
+    product_metrics = data.groupby(['category', 'sub-category']).agg({
+        'sales': 'sum',
+        'profit': 'sum',
+        'quantity': 'sum',
         'profit_margin': 'mean'
     }).round(2)
     
@@ -92,9 +92,9 @@ def analyze_product_performance(data):
     plt.figure(figsize=(12, 6))
     sns.barplot(
         data=data,
-        x='Sales',
-        y='Sub-Category',
-        hue='Category',
+        x='sales',
+        y='sub-category',
+        hue='category',
         palette=['#003049', '#d62828', '#f77f00']
     )
     plt.title('Sales by Product Category')
@@ -113,8 +113,8 @@ def analyze_regional_performance(data):
     # Regional sales over time
     regional_sales = data.pivot_table(
         index='year_month',
-        columns='Region',
-        values='Sales',
+        columns='region',
+        values='sales',
         aggfunc='sum'
     )
     
@@ -136,8 +136,8 @@ regional_analysis = analyze_regional_performance(data)
 ```python
 def analyze_profitability(data):
     # Calculate profitability metrics
-    profit_metrics = data.groupby(['Category', 'Sub-Category']).agg({
-        'Profit': ['sum', 'mean'],
+    profit_metrics = data.groupby(['category', 'sub-category']).agg({
+        'profit': ['sum', 'mean'],
         'profit_margin': 'mean',
         'discount_amount': 'sum'
     }).round(2)
@@ -146,7 +146,7 @@ def analyze_profitability(data):
     plt.figure(figsize=(10, 6))
     sns.boxplot(
         data=data,
-        x='Category',
+        x='category',
         y='profit_margin',
         palette=['#003049', '#d62828', '#f77f00']
     )
