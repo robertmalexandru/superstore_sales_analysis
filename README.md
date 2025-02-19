@@ -16,11 +16,11 @@ plt.style.use("ggplot")
 pd.set_option("display.float_format", lambda x: "%.2f" % x)
 
 # Load and prepare data
-data = pd.read_csv("superstore.csv", encoding_errors="ignore")
+data = pd.read_csv("superstore_sales_clean_data.csv", encoding_errors="ignore")
 
 # Convert dates and select relevant columns
-data["order_date"] = pd.to_datetime(data["order_date"])
-data["ship_date"] = pd.to_datetime(data["ship_date"])
+data["order_date"] = pd.to_datetime(data["order_date"], dayfirst=True)
+data["ship_date"] = pd.to_datetime(data["ship_date"], dayfirst=True)
 
 essential_columns = [
     "row_id", "order_id", "order_date", "ship_date", "ship_mode", "customer_id", "customer_name", "segment",
