@@ -2,6 +2,20 @@
 
 ![Superstore](superstore.jpeg)
 
+## Table of Contents
+1. [Overview](#overview)
+2. [Setup and Data Loading](#setup-and-data-loading)
+3. [Feature Engineering](#feature-engineering)
+   - [Further Data Cleaning](#further-data-cleaning)
+   - [Feature Creation](#feature-creation)
+4. [Sales Analysis](#sales-analysis)
+   - [Temporal Trends](#temporal-trends)
+   - [Sales Trends Analysis](#sales-trends-analysis)
+   - [Product Performance](#product-performance)
+   - [Regional Analysis](#regional-analysis)
+5. [Key Findings](#key-findings)
+6. [Recommendations](#recommendations)
+
 ## Overview
 This analysis explores the Superstore sales dataset to uncover key business insights, including sales trends, product performance, regional patterns, and profitability drivers. The goal is to identify opportunities for optimization and growth.
 
@@ -142,46 +156,16 @@ print(analyze_product_performance(data))
 
 ![Product Metrics](product_metrics.png)
 
-### Key Findings:
+## Key Findings
 - **Technology**: Phones lead the sales figures, while copiers underperform.
 - **Furniture**: Chairs dominate sales, while bookcases struggle to gain traction.
 - **Office Supplies**: Storage and binders show steady growth.
+- **Regional Performance**: The West region has the highest revenue, while the South lags behind.
+- **Shipping Impact**: Faster shipping correlates with higher customer retention.
 
-### Regional Analysis
-
-```python
-# Function to analyze regional sales trends
-def analyze_regional_performance(data):
-    regional_sales = data.pivot_table(
-        index='year_month',
-        columns='region',
-        values='sales',
-        aggfunc='sum'
-    )
-    
-    fig, ax = plt.subplots(figsize=(12, 6))
-    if not regional_sales.empty:
-        regional_sales.plot(ax=ax, linewidth=2)
-    ax.set_title('Regional Sales Trends')
-    ax.set_xlabel('Date')
-    ax.set_ylabel('Sales ($)')
-    ax.legend(title='Region', bbox_to_anchor=(1.05, 1), loc='upper left')
-    plt.grid(True)
-    plt.tight_layout()
-    
-    return regional_sales
-
-analyze_regional_performance(data)
-```
-
-![Regional Sales](regional_sales.png)
-
-### Regional Insights:
-- **West** and **East** regions lead in total sales.
-- **South** region shows opportunity for growth, while the **Central** region maintains steady performance.
-
-### Recommendations
+## Recommendations
 - **Increase marketing spend** in Q4 to capitalize on peak demand.
 - **Optimize inventory levels** for high-performing categories such as technology and office supplies.
 - **Improve shipping logistics** in underperforming regions to enhance delivery speed and customer satisfaction.
 - **Expand targeted promotions** for struggling products like bookcases and copiers to boost sales.
+- **Consider regional pricing adjustments** to maximize profitability in lower-performing markets.
